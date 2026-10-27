@@ -1,4 +1,11 @@
 def get_human_age(cat_age: int, dog_age: int) -> list[int]:
+    """
+    Convert cat and dog ages into equivalent human years.
+
+    :param cat_age: Age of the cat in years.
+    :param dog_age: Age of the dog in years.
+    :return: A list containing [cat_human_years, dog_human_years].
+    """
     if (
         not isinstance(cat_age, int)
         or isinstance(cat_age, bool)
