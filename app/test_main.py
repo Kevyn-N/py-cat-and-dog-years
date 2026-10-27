@@ -1,36 +1,56 @@
+import pytest
 from app.main import get_human_age
 
 
-def test_zero_ages() -> None:
-    """Test when both cat and dog ages are zero."""
-    assert get_human_age(0, 0) == [0, 0]
+@pytest.mark.parametrize(
+    "cat_age, dog_age, expected",
+    [
+        (0, 0, [0, 0]),
+        (14, 14, [0, 0]),
+        (15, 15, [1, 1]),
+        (23, 23, [1, 1]),
+        (24, 24, [2, 2]),
+        (28, 28, [3, 2]),
+        (100, 100, [21, 17]),
+    ],
+)
+def test_get_human_age(
+    cat_age: int,
+    dog_age: int,
+    expected: list[int]
+) -> None:
+    """Test get_human_age with various valid ages."""
+    assert get_human_age(cat_age, dog_age) == expected
 
 
-def test_ages_below_fifteen() -> None:
-    """Test when ages are below 15, should return zero human years."""
-    assert get_human_age(14, 14) == [0, 0]
+@pytest.mark.parametrize(
+    "cat_age, dog_age",
+    [
+        (-1, 10),
+        (10, -5),
+    ],
+)
+def test_get_human_age_negative_raises_value_error(
+    cat_age: int,
+    dog_age: int
+) -> None:
+    """Test that negative ages raise ValueError."""
+    with pytest.raises(ValueError):
+        get_human_age(cat_age, dog_age)
 
 
-def test_age_at_fifteen() -> None:
-    """Test when ages reach exactly 15 years."""
-    assert get_human_age(15, 15) == [1, 1]
-
-
-def test_ages_between_fifteen_and_twenty_four() -> None:
-    """Test ages between 15 and 23."""
-    assert get_human_age(23, 23) == [1, 1]
-
-
-def test_age_at_twenty_four() -> None:
-    """Test when ages reach exactly 24 years."""
-    assert get_human_age(24, 24) == [2, 2]
-
-
-def test_ages_with_different_growth_rates() -> None:
-    """Test ages where cat and dog conversion rates diverge."""
-    assert get_human_age(28, 28) == [3, 2]
-
-
-def test_higher_ages() -> None:
-    """Test with higher ages like 100 to verify calculations."""
-    assert get_human_age(100, 100) == [21, 17]
+@pytest.mark.parametrize(
+    "cat_age, dog_age",
+    [
+        ("10", 10),
+        (10, "10"),
+        (None, 10),
+    ],
+)
+def test_get_human_age_invalid_type_raises_type_error(
+    cat_age: int,
+    dog_age: int
+) -> None:
+    """Test that invalid data types raise TypeError."""
+    with pytest.raises(TypeError):
+        get_human_age(cat_age, dog_age)
